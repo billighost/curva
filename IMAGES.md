@@ -1,6 +1,18 @@
 # CURVA — Visual Asset & Image Generation Specification
 
-This document provides complete, production-grade image generation briefs and prompt specifications for all photography slots across the **Curva** single-page brand experience.
+This document provides complete, production-grade image generation briefs, asset status, and prompt specifications for all photography slots across the **Curva** single-page brand experience.
+
+---
+
+## Asset Inventory & Live References
+
+| Slot | File Reference | Aspect Ratio | Dimensions | Section Location | Status |
+|---|---|---|---|---|---|
+| **01** | [`assets/img-bottle.jpg`](file:///c:/Users/bb201/Documents/curva/assets/img-bottle.jpg) | `4:5` (3:4) | 1024 × 1365 px | Featured Oil / Flagship Band | **Active & Generated** |
+| **02** | [`assets/img-texture.jpg`](file:///c:/Users/bb201/Documents/curva/assets/img-texture.jpg) | `3:2` | 1365 × 910 px | Statement Band | **Active & Generated** |
+| **03** | [`assets/img-counter.jpg`](file:///c:/Users/bb201/Documents/curva/assets/img-counter.jpg) | `16:9` | 1365 × 768 px | Collection / Counter Band | **Active & Generated** |
+| **04** | [`assets/img-ritual.jpg`](file:///c:/Users/bb201/Documents/curva/assets/img-ritual.jpg) | `16:9` | 1365 × 768 px | The Ritual Band | **Active & Generated** |
+| **05** | [`assets/og-image.png`](file:///c:/Users/bb201/Documents/curva/assets/og-image.png) | `1200:630` | 1200 × 630 px | Open Graph & Social Cards | **Active & Compiled** |
 
 ---
 
@@ -14,24 +26,24 @@ This document provides complete, production-grade image generation briefs and pr
 2. **Lighting & Texture**:
    - **Key Light**: Single-source directional warm key (3800K–4100K) from high-left (45° angle), producing crisp specular highlights and golden amber subsurface scattering/caustics.
    - **Fill Light**: Soft, subtle neutral fill preserving micro-shadow definition and skin/glass texture.
-   - **Texture**: Tangible, high-resolution organic surface details — real glass refractions, natural pores, and viscous liquid meniscus. Zero artificial airbrushing or plastic CGI smoothness.
+   - **Texture**: Tangible, high-resolution organic surface details — real glass refractions, open neck brim with flowing meniscus, natural skin pores, and viscous liquid luster. Zero artificial airbrushing or plastic CGI smoothness.
 
 3. **Representation & Origin**:
    - Curva is formulated and hand-blended in small batches in Lagos, Nigeria.
-   - Models and hand imagery must celebrate rich, deep melanated Nigerian skin tones with authentic natural glow.
+   - Models and hand imagery celebrate rich, deep melanated Nigerian skin tones with authentic natural glow.
 
 ---
 
 ## 1. Flagship Product Shot — `assets/img-bottle.jpg`
 
-- **Slot Location**: Featured Oil / Product Band
-- **Aspect Ratio**: `4:5` (Vertical Portrait)
-- **Rendered Size**: ~640 × 800 px (Responsive)
-- **Single Job**: Establish the flagship bottle as a tactile, premium apothecary object with viscous golden amber oil inside.
+- **Slot Location**: Featured Oil / Product Band (`.product-art`)
+- **Aspect Ratio**: `4:5` (3:4)
+- **Live File**: `assets/img-bottle.jpg`
+- **Single Job**: Showcase the open-mouth apothecary glass bottle with rich amber oil brimming at the rim and dripping down the glass neck onto the shoulder, with the glass pipette dropper resting beside it.
 
 ### Detailed Prompt
 > **Prompt**:
-> High-end commercial luxury studio product photography of a single 100ml cylindrical heavy-base amber glass cosmetic dropper bottle labeled "curva" in minimalist lower-case typography. The bottle is positioned slightly off-center on a seamless, pure flat white `#FFFFFF` matte paper tabletop. Warm directional studio spotlight (4000K) illuminates the bottle from the upper-left, causing rich, viscous golden-amber oil (`#D89A3E`) inside the translucent amber glass to glow from within, casting an intricate, delicate golden caustic light refraction and a soft, warm cast shadow onto the clean white surface. Crisp glass reflection highlights along the shoulder and bottle curve. Shallow depth of field, sharp focus on the glass shoulder and amber liquid meniscus. Hasselblad H6D-100c, 85mm macro lens, f/4.0, ISO 64, 1/160s. Editorial luxury aesthetic, minimal, ultra-clean negative space, award-winning skincare product photography.
+> High-end commercial luxury studio product photography of a single 100ml cylindrical heavy-base amber glass cosmetic bottle with an open mouth collar at the top (dropper cap unsealed and removed, resting gracefully beside the bottle). Rich, viscous golden-amber botanical body oil is brimmed at the open glass lip, with a delicate glisten of oil overflowing at the rim and running down the neck. Minimalist white apothecary label on the glass reads "curva" and "HIP & BUTT OIL". Pristine, seamless flat white `#FFFFFF` paper background with generous negative space. Warm directional studio spotlight from high-left (4000K) illuminates translucent amber oil inside the glass, casting delicate golden caustics and a soft, warm cast shadow on the white tabletop. Razor-sharp Hasselblad macro focus, quiet luxury skincare editorial.
 
 ### Negative Prompt
 > `pink background, blush tones, cream paper, warm yellow background, cluttered props, plants, marble counter, plastic bottle, fake droplets, CGI render, cartoonish 3D, harsh digital noise, blurry label, oversaturated red, low resolution`
@@ -40,16 +52,16 @@ This document provides complete, production-grade image generation briefs and pr
 > N/A (Product still life).
 
 ### Key Takeaway
-> *"This is a pure, concentrated botanical oil made in small artisanal batches."*
+> *"An unsealed, concentrated botanical oil made in small artisanal batches, ready to pour."*
 
 ---
 
 ## 2. Liquid Texture Macro — `assets/img-texture.jpg`
 
-- **Slot Location**: Statement Band
+- **Slot Location**: Statement Band (`.statement-art`)
 - **Aspect Ratio**: `3:2` (Landscape)
-- **Rendered Size**: ~600 × 400 px (Responsive)
-- **Single Job**: Reveal the physical density, viscosity, and warmth of the oil on skin.
+- **Live File**: `assets/img-texture.jpg`
+- **Single Job**: Reveal the physical density, surface tension, and warmth of the oil on radiant skin.
 
 ### Detailed Prompt
 > **Prompt**:
@@ -68,9 +80,9 @@ This document provides complete, production-grade image generation briefs and pr
 
 ## 3. Full Counter Flat-Lay — `assets/img-counter.jpg`
 
-- **Slot Location**: Collection / Counter Band
+- **Slot Location**: Collection / Counter Band (`.collection-art`)
 - **Aspect Ratio**: `16:9` (Widescreen)
-- **Rendered Size**: ~800 × 450 px (Responsive)
+- **Live File**: `assets/img-counter.jpg`
 - **Single Job**: Showcase the complete Curva counter as a unified, purposeful botanical formulary.
 
 ### Detailed Prompt
@@ -90,9 +102,9 @@ This document provides complete, production-grade image generation briefs and pr
 
 ## 4. The Nightly Ritual in Motion — `assets/img-ritual.jpg`
 
-- **Slot Location**: The Ritual Band
+- **Slot Location**: The Ritual Band (`.ritual-art`)
 - **Aspect Ratio**: `16:9` (Widescreen)
-- **Rendered Size**: ~800 × 450 px (Responsive)
+- **Live File**: `assets/img-ritual.jpg`
 - **Single Job**: Frame the application as an intimate, grounding nightly practice.
 
 ### Detailed Prompt
@@ -113,8 +125,8 @@ This document provides complete, production-grade image generation briefs and pr
 ## 5. Social Share Card — `assets/og-image.png`
 
 - **Slot Location**: Open Graph & Twitter Summary Large Image
-- **Aspect Ratio**: `1200 × 630 px` (Standard Open Graph)
-- **Rendered Size**: 1200 × 630 px
+- **Aspect Ratio**: `1200 × 630 px`
+- **Live File**: `assets/og-image.png`
 - **Single Job**: Create an unforgettable, high-converting thumbnail with pure white canvas, amber bottle, and running oil rivulet.
 
 ### Detailed Prompt
