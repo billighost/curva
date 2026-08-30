@@ -308,7 +308,7 @@ ul,ol{ list-style:none; }
 
 .hero-stage{
   position:relative; display:flex; justify-content:flex-end; align-items:center;
-  padding-right:clamp(1.5rem, 4vw, 5rem);
+  padding-right:calc(var(--band-x) + var(--gut) * .5 - 30px);
 }
 .hero-bottle-wrap{
   position:relative; display:inline-block; max-width:270px; width:100%;
