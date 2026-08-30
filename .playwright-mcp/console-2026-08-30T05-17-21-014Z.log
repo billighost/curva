@@ -1,0 +1,4 @@
+[     824ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8899/assets/img-texture.jpg:0
+[   20948ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8899/assets/img-bottle.jpg:0
+[  349788ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8899/assets/img-texture.jpg:0
+[  350473ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8899/assets/img-bottle.jpg:0
