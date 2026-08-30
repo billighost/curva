@@ -141,8 +141,9 @@ ul,ol{ list-style:none; }
    LAYER STACK
    .page is the shared coordinate space the oil is measured against:
      z0  #tintLayer  — flat bands (product tint, closing dark)
-     z1  #oilWrap    — the falling oil, painted ON TOP of those bands
-     z2  .band       — every piece of real content
+     z1  .hero-stage, .fig — photography and visual artwork
+     z2  #oilWrap    — the falling oil, flowing visibly OVER the bottle mouth & glass
+     z3  text copy   — headlines, paragraphs, and interactive buttons
    Content always wins, so each band leaves the oil an empty corridor and
    the liquid can be fully opaque and heavily shaded without hurting text.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -150,14 +151,14 @@ ul,ol{ list-style:none; }
 #tintLayer{ position:absolute; inset:0 0 auto 0; z-index:0; pointer-events:none; }
 #tintLayer .tint{ position:absolute; left:0; width:100%; }
 
-#oilWrap{ position:absolute; top:0; left:0; width:100%; z-index:1; pointer-events:none; }
+#oilWrap{ position:absolute; top:0; left:0; width:100%; z-index:2; pointer-events:none; }
 #oilSvg{ display:block; overflow:visible; }
 
 .band{
-  position:relative; z-index:2;
+  position:relative;
   padding:var(--band-y) calc(var(--band-x) + var(--rail-w)) var(--band-y) var(--band-x);
 }
-.inner{ max-width:1300px; margin-inline:auto; }
+.inner{ position:relative; z-index:3; max-width:1300px; margin-inline:auto; }
 
 /* the oil's route anchors are defined with .rail, near the end of this file */
 
@@ -306,28 +307,29 @@ ul,ol{ list-style:none; }
 @keyframes cue{ 0%{transform:translateX(-100%)} 55%,100%{transform:translateX(100%)} }
 
 .hero-stage{
-  position:relative; display:flex; justify-content:center; align-items:center;
-  margin-right:calc(var(--gut) * -.25);
+  position:relative; display:flex; justify-content:flex-end; align-items:center;
+  padding-right:clamp(0.5rem, 2.5vw, 2.5rem);
 }
-.bottle{
-  width:100%; max-width:322px; height:auto;
-  filter:drop-shadow(0 32px 42px rgba(20,16,14,.12));
+.hero-bottle-wrap{
+  position:relative; display:inline-block; max-width:360px; width:100%;
+}
+.bottle-photo{
+  width:100%; height:auto; display:block;
+  filter:drop-shadow(0 28px 38px rgba(20,16,14,.11));
   transition:transform .6s var(--ease), filter .6s var(--ease);
 }
-.hero-stage:hover .bottle{
+.hero-bottle-wrap:hover .bottle-photo{
   transform:translateY(-4px);
-  filter:drop-shadow(0 40px 52px rgba(20,16,14,.16));
+  filter:drop-shadow(0 36px 48px rgba(20,16,14,.15));
 }
-.hero-plinth{
-  position:absolute; bottom:5%; left:50%; transform:translateX(-50%);
-  width:72%; height:24px; border-radius:50%;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(20,16,14,.13), transparent 70%);
+.hero-bottle-wrap .oil-a{
+  position:absolute; width:2px; height:2px; pointer-events:none;
 }
 @media (max-width:900px){
   .hero{ grid-template-columns:1fr; min-height:auto; gap:2.6rem; }
   .hero-copy{ max-width:none; }
   .hero-stage{ order:-1; margin-right:0; }
-  .bottle{ max-width:196px; }
+  .hero-bottle-wrap{ max-width:240px; }
 }
 
 /* ── buttons ─────────────────────────────────────────────────────────── */

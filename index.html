@@ -238,65 +238,17 @@
     </div>
 
     <div class="hero-stage">
-      <!-- The bottle is real geometry, not a photo, so the oil's origin can
-           be measured off its lip. The anchors below live inside the SVG,
-           which means they scale exactly with the artwork at any viewport. -->
-      <svg class="bottle" viewBox="0 0 240 400" xmlns="http://www.w3.org/2000/svg" role="img"
-           aria-label="A 100 ml amber glass bottle of Curva hip and butt oil, open at the lip, with oil brimming over.">
-        <defs>
-          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0"    stop-color="#8A4F16"/>
-            <stop offset=".16"  stop-color="#C1802A"/>
-            <stop offset=".42"  stop-color="#9A5A1C"/>
-            <stop offset=".78"  stop-color="#6E3A10"/>
-            <stop offset="1"    stop-color="#4A2409"/>
-          </linearGradient>
-          <linearGradient id="inner" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#D89A3E" stop-opacity=".55"/>
-            <stop offset="1" stop-color="#2B1607" stop-opacity=".9"/>
-          </linearGradient>
-          <clipPath id="bodyClip">
-            <path d="M104 54 L136 54 L136 96 C150 102 162 111 171 123 C186 142 192 166 192 192 L192 344 C192 374 174 392 146 392 L94 392 C66 392 48 374 48 344 L48 192 C48 166 54 142 69 123 C78 111 90 102 104 96 Z"/>
-          </clipPath>
-        </defs>
-
-        <!-- neck + body -->
-        <path d="M104 54 L136 54 L136 96 C150 102 162 111 171 123 C186 142 192 166 192 192 L192 344 C192 374 174 392 146 392 L94 392 C66 392 48 374 48 344 L48 192 C48 166 54 142 69 123 C78 111 90 102 104 96 Z"
-              fill="url(#glass)"/>
-        <!-- oil level inside the glass -->
-        <g clip-path="url(#bodyClip)">
-          <rect x="40" y="212" width="160" height="200" fill="url(#inner)"/>
-          <ellipse cx="120" cy="212" rx="76" ry="8.5" fill="#E7AE55" opacity=".5"/>
-        </g>
-        <!-- the lip collar, and the open mouth -->
-        <path d="M99 41h42v15H99z" fill="#4A2409"/>
-        <path d="M101 38h38v6h-38z" fill="#6E3A10"/>
-        <ellipse cx="120" cy="39" rx="19" ry="5.4" fill="#1C0F04"/>
-        <ellipse cx="120" cy="38.4" rx="14" ry="3.6" fill="#8A4F16"/>
-        <!-- glass highlights -->
-        <path d="M70 140c-12 38-13 150-3 206" stroke="#FFF3DC" stroke-opacity=".34" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M180 166c6 28 6 142 1 180" stroke="#FFF3DC" stroke-opacity=".13" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <!-- label -->
-        <rect x="64" y="250" width="112" height="68" rx="1.5" fill="#FCFBF9"/>
-        <text x="120" y="282" text-anchor="middle" font-family="Schibsted Grotesk, sans-serif"
-              font-size="25" font-weight="600" letter-spacing="-1.1" fill="#14100E">curva</text>
-        <text x="120" y="298" text-anchor="middle" font-family="Schibsted Grotesk, sans-serif"
-              font-size="6.4" letter-spacing="2.3" fill="#605A54">HIP &amp; BUTT OIL</text>
-        <text x="120" y="311" text-anchor="middle" font-family="Schibsted Grotesk, sans-serif"
-              font-size="5.6" letter-spacing="1.6" fill="#938C85">100 ML · SMALL BATCH</text>
-
-        <!-- ── the oil's route across the glass ──
-             It brims at the lip, runs down the outside of the neck, gathers
-             at the widest point of the shoulder, and lets go there. Anchors
-             sit on the bottle's right silhouette so half the thread shows
-             outside the glass and half is clipped behind it. -->
-        <rect data-oil-a x="134" y="46"  width="2" height="2" fill="none"/>
-        <rect data-oil-a x="136" y="92"  width="2" height="2" fill="none"/>
-        <rect data-oil-a x="166" y="136" width="2" height="2" fill="none"/>
-        <rect data-oil-a x="188" y="188" width="2" height="2" fill="none"/>
-        <rect data-oil-a data-pool=".55" x="192" y="244" width="2" height="2" fill="none"/>
-      </svg>
-      <div class="hero-plinth" aria-hidden="true"></div>
+      <!-- The flagship bottle photo with open mouth, with anchors mapped directly
+           to the glass lip, neck, shoulder, and base. Scales responsively. -->
+      <div class="hero-bottle-wrap">
+        <img class="bottle-photo" src="assets/img-bottle.jpg" alt="A 100 ml amber glass bottle of Curva hip and butt oil, open at the lip, with golden amber oil brimming over." width="360" height="480">
+        <span class="oil-a" data-oil-a style="left:53.5%; top:23.5%;"></span>
+        <span class="oil-a" data-oil-a style="left:54.5%; top:28%;"></span>
+        <span class="oil-a" data-oil-a style="left:59.5%; top:34%;"></span>
+        <span class="oil-a" data-oil-a data-pool=".45" style="left:63%; top:40%;"></span>
+        <span class="oil-a" data-oil-a style="left:64%; top:52%;"></span>
+        <span class="oil-a" data-oil-a style="left:64.2%; top:76%;"></span>
+      </div>
     </div>
 
     <!-- clear of the glass it falls free and joins the rail -->
