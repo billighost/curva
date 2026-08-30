@@ -544,6 +544,12 @@ function checkReveals(){
       el.classList.add('is-in');
     }
   });
+  $$('.fig img').forEach(img => {
+    if (img.complete && img.naturalWidth) {
+      img.classList.add('is-loaded');
+      img.closest('.fig')?.classList.add('has-image');
+    }
+  });
 }
 
 const io = new IntersectionObserver(es => {
