@@ -530,14 +530,30 @@ if (nav){
 }
 
 /* reveals */
+const revealEls = $$('.r-wipe,.r-rise,.step,.f-row');
+function checkReveals(){
+  if (reduce){
+    revealEls.forEach(el => el.classList.add('is-in'));
+    return;
+  }
+  const vh = window.innerHeight || 800;
+  revealEls.forEach(el => {
+    if (el.classList.contains('is-in')) return;
+    const r = el.getBoundingClientRect();
+    if (r.top < vh * 0.95 && r.bottom > 0) {
+      el.classList.add('is-in');
+    }
+  });
+}
+
 const io = new IntersectionObserver(es => {
   es.forEach(e => {
     if (!e.isIntersecting) return;
     e.target.classList.add('is-in');
     io.unobserve(e.target);
   });
-}, { threshold: .16, rootMargin: '0px 0px -6% 0px' });
-$$('.r-wipe,.r-rise,.step,.f-row').forEach(el => io.observe(el));
+}, { threshold: 0.05, rootMargin: '0px 0px -2% 0px' });
+revealEls.forEach(el => io.observe(el));
 
 /* images: fade in when they actually decode, and drop the fallback label */
 $$('.fig img').forEach(img => {
@@ -551,7 +567,8 @@ const form = $('#waitlistForm'), confirmEl = $('#waitlistConfirm');
 form?.addEventListener('submit', e => {
   e.preventDefault();
   confirmEl?.classList.add('is-on');
-  form.querySelector('input').value = '';
+  const input = form.querySelector('input');
+  if (input) input.value = '';
 });
 
 /* boot — wait for webfonts, since metrics move the anchors */
@@ -559,6 +576,7 @@ function boot(){
   build(); measureTarget();
   shown = reduce ? target : 0;
   footerProgress(); render(); kick();
+  checkReveals();
 }
 if (document.fonts?.ready) document.fonts.ready.then(boot); else addEventListener('load', boot);
 boot();

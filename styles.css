@@ -279,7 +279,7 @@ ul,ol{ list-style:none; }
   align-items:center; gap:clamp(2rem,5vw,5rem);
   padding-top:clamp(7rem,14vh,10rem); padding-bottom:clamp(3rem,7vh,6rem);
 }
-.hero-copy{ max-width:16ch; }
+.hero-copy{ max-width:clamp(28ch,42vw,38ch); }
 .hero .eyebrow{ display:block; margin-bottom:1.6rem; }
 .hero .display .serif{ color:var(--oil-3); }
 .hero-sub{
@@ -382,9 +382,18 @@ ul,ol{ list-style:none; }
 /* ═══════════════════════════════════════════════════════════════════════
    COLLECTION — a price list, so the icons are identifiers, not decoration
    ═══════════════════════════════════════════════════════════════════════ */
-.collection-head{ max-width:50ch; margin-bottom:clamp(2.6rem,5vw,4.2rem); }
+.collection-top{
+  display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:clamp(2rem,4vw,4rem); align-items:end;
+  margin-bottom:clamp(2.6rem,5vw,4.2rem);
+}
+.collection-head{ max-width:50ch; margin-bottom:0; }
 .collection-head .eyebrow{ display:block; margin-bottom:1rem; }
 .collection-head .body-lg{ margin-top:1.3rem; max-width:44ch; }
+.collection-art{ width:100%; }
+@media (max-width:900px){
+  .collection-top{ grid-template-columns:1fr; gap:2.2rem; }
+}
 
 .formulary{ border-top:1px solid var(--ink); }
 .f-row{
@@ -443,9 +452,18 @@ ul,ol{ list-style:none; }
 /* ═══════════════════════════════════════════════════════════════════════
    RITUAL — a real sequence, so numbering is information, not ornament
    ═══════════════════════════════════════════════════════════════════════ */
-.ritual{ /* tint is painted by #tintLayer (z0) via data-tint, so the oil stays visible */ }
-.ritual-head{ max-width:46ch; margin-bottom:clamp(2.8rem,5vw,4.4rem); }
+.ritual-top{
+  display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:clamp(2rem,4vw,4rem); align-items:end;
+  margin-bottom:clamp(2.8rem,5vw,4.4rem);
+}
+.ritual-head{ max-width:46ch; margin-bottom:0; }
 .ritual-head .eyebrow{ display:block; margin-bottom:1rem; }
+.ritual-head .body-lg{ margin-top:1.3rem; max-width:44ch; }
+.ritual-art{ width:100%; }
+@media (max-width:900px){
+  .ritual-top{ grid-template-columns:1fr; gap:2.2rem; }
+}
 .steps{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(2rem,4vw,3.4rem); }
 .step{ display:flex; flex-direction:column; gap:1.1rem; }
 .step-n{
