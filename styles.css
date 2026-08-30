@@ -140,12 +140,18 @@ ul,ol{ list-style:none; }
 /* ═══════════════════════════════════════════════════════════════════════
    LAYER STACK
    .page is the shared coordinate space the oil is measured against:
-     z0  #tintLayer  — flat bands (product tint, closing dark)
-     z1  .hero-stage, .fig — photography and visual artwork
-     z2  #oilWrap    — the falling oil, flowing visibly OVER the bottle mouth & glass
-     z3  text copy   — headlines, paragraphs, and interactive buttons
-   Content always wins, so each band leaves the oil an empty corridor and
-   the liquid can be fully opaque and heavily shaded without hurting text.
+     z0  #tintLayer          — flat bands (product tint, closing dark)
+     z1  photography & art   — .hero-stage, .statement-art, .product-art,
+                                .collection-art, .ritual-art (and the .fig
+                                inside each) — passable ground the oil runs over
+     z2  #oilWrap             — the falling oil
+     z3  text                — copy blocks, lists, forms, buttons: the only
+                                things the oil is never allowed to cover
+   Only the *text* wrappers get z3, not the whole .inner — .inner itself
+   is z-index:auto, purely a width/centering box, so an image sitting next
+   to a paragraph inside the same .inner doesn't get dragged above the oil
+   along with it. Every text wrapper and every art wrapper below is given
+   its z-index explicitly for this reason; nothing here should be assumed.
    ═══════════════════════════════════════════════════════════════════════ */
 .page{ position:relative; }
 #tintLayer{ position:absolute; inset:0 0 auto 0; z-index:0; pointer-events:none; }
@@ -158,7 +164,28 @@ ul,ol{ list-style:none; }
   position:relative;
   padding:var(--band-y) calc(var(--band-x) + var(--rail-w)) var(--band-y) var(--band-x);
 }
-.inner{ position:relative; z-index:3; max-width:1300px; margin-inline:auto; }
+.inner{ position:relative; max-width:1300px; margin-inline:auto; }
+
+/* text layer — z3, always above the oil */
+.hero-copy,
+.statement-copy,
+.product-copy,
+.collection-head,
+.formulary,
+.reserve,
+.ritual-head,
+.steps,
+.closing .inner{
+  position:relative; z-index:3;
+}
+
+/* art layer — z1, the oil runs over this, never under it */
+.statement-art,
+.product-art,
+.collection-art,
+.ritual-art{
+  position:relative; z-index:1;
+}
 
 /* the oil's route anchors are defined with .rail, near the end of this file */
 
@@ -313,11 +340,15 @@ ul,ol{ list-style:none; }
 @keyframes cue{ 0%{transform:translateX(-100%)} 55%,100%{transform:translateX(100%)} }
 
 .hero-stage{
-  position:relative; display:flex; justify-content:flex-end; align-items:center;
+  position:relative; z-index:1; display:flex; justify-content:flex-end; align-items:center;
   padding-right:calc(var(--band-x) + var(--gut) * .5 - 30px);
 }
 .hero-bottle-wrap{
-  position:relative; display:inline-block; max-width:270px; width:100%;
+  /* sized off the stage's own box, not a flat px cap, so it actually
+     fills the column instead of stranding a gutter of empty ground
+     between the copy and the bottle on wide viewports */
+  position:relative; display:inline-block; width:100%;
+  max-width:min(30vw, 46svh);
 }
 .bottle-photo{
   width:100%; height:auto; display:block;
@@ -332,10 +363,20 @@ ul,ol{ list-style:none; }
   position:absolute; width:2px; height:2px; pointer-events:none;
 }
 @media (max-width:900px){
-  .hero{ grid-template-columns:1fr; min-height:auto; gap:2.6rem; }
-  .hero-copy{ max-width:none; }
+  .hero{
+    display:flex; flex-direction:column; align-items:center;
+    min-height:auto; gap:2.2rem;
+  }
+  .hero-copy{ max-width:52ch; }
   .hero-stage{ order:-1; margin-right:0; justify-content:center; padding-right:0; }
-  .hero-bottle-wrap{ max-width:190px; }
+  .hero-bottle-wrap{ max-width:min(52vw, 220px); }
+  /* the grid's column gap doesn't apply in a single flex column, so the
+     row rhythm was inherited wholesale from the desktop measurements —
+     tightened here so the CTAs sit close enough to read as one screen,
+     not a scroll past a blank stretch to find them */
+  .hero-sub{ margin-top:1.3rem; }
+  .hero-actions{ margin-top:1.7rem; }
+  .hero-cue{ margin-top:1.9rem; }
 }
 
 /* ── buttons ─────────────────────────────────────────────────────────── */
@@ -569,6 +610,16 @@ ul,ol{ list-style:none; }
   0%{ stroke-dashoffset:0; }
   100%{ stroke-dashoffset:188; }
 }
+/* the flood's reveal window (#fClipRect, driven per-scroll from oil.js)
+   gets its own short lag, so crossing the footer line reads as the pool
+   genuinely spreading out, and scrolling back up reads as it genuinely
+   drawing back in — not a value snapping to the scroll position. */
+#fClipRect{
+  transition:x .55s var(--ease-soft), width .55s var(--ease-soft);
+}
+@media (prefers-reduced-motion:reduce){
+  #fClipRect{ transition:none; }
+}
 .footer .inner{ position:relative; z-index:2; }
 .footer-top{ padding-top:clamp(9rem,16vw,14rem); }   /* clearance for the pool */
 .footer-grid{
@@ -647,37 +698,69 @@ ul,ol{ list-style:none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   THE OIL'S ROUTE — one rail, the full height of the page
+   THE OIL'S ROUTE — a corridor that reads the layout it's floating over
    ───────────────────────────────────────────────────────────────────────
-   Reserving a single corridor and laying every band out around it is what
-   keeps the liquid vertical. The alternative — a corridor per section, each
-   in a different column — forces the oil to travel hundreds of pixels
-   sideways in the short gap between two bands, and oil does not run
-   sideways. Here the lateral travel is only the meander, plus a small
-   per-band --shift that gives the rivulet a soft serpentine.
-   Bonus: this is identical on desktop and mobile, so there is one
-   behaviour to reason about instead of two.
+   Previously every band reserved the same right-hand gutter, so the oil
+   ran a straight column for the whole page regardless of which side that
+   section's photograph, list or copy actually sat on. Now each band
+   declares which side its own visual weight is on — [data-rail="left"]
+   for the sections whose art sits in the left column, the plain .rail
+   default for the sections whose art (or, for the bottle and the close,
+   the whole composition) sits on the right — and the oil's gutter is
+   reserved on THAT side, so the liquid is always running past something,
+   never past dead margin.
+
+   The one real crossing — right, all the way through to the flagship
+   product shot on the left, then back right for the counter — happens
+   over the full height of two adjacent bands, so the Catmull–Rom spline
+   in oil.js has hundreds of vertical px to resolve it in. It reads as a
+   diagonal pour finding a new line, not a jump cut; the curvature term
+   already baked into oil.js (bake(): "curvature → pooling") thickens the
+   liquid exactly at that turn for free, the same way a real rivulet
+   beads up wherever it changes direction.
    ═══════════════════════════════════════════════════════════════════════ */
 .rail{
   position:absolute; top:0; bottom:0; width:0; pointer-events:none;
   right:calc(var(--band-x) + var(--gut) * .5 + var(--shift,0px));
 }
+.band[data-rail="left"]{
+  padding-left:calc(var(--band-x) + var(--rail-w));
+  padding-right:var(--band-x);
+}
+.band[data-rail="left"] .rail{
+  right:auto;
+  left:calc(var(--band-x) + var(--gut) * .5 + var(--shift,0px));
+}
 .oil-a{ position:absolute; left:0; width:0; height:0; pointer-events:none; }
 .oil-a.t{ top:0; } .oil-a.m{ top:50%; } .oil-a.b{ bottom:0; }
 
-/* the serpentine: a few tens of px of drift per band, no more */
-.hero      { --shift:-30px; }
-.statement { --shift:14px;  }
-.product   { --shift:-18px; }
-.collection{ --shift:22px;  }
-.ritual    { --shift:-14px; }
-.closing   { --shift:30px;  }
+/* the serpentine: drift within a side, sized to feel like a current
+   finding its own line rather than a ruler-straight column */
+.hero      { --shift:-34px; }
+.statement { --shift:26px;  }
+.product   { --shift:-30px; }   /* on the left: the flagship photo's edge */
+.collection{ --shift:34px;  }
+.ritual    { --shift:-22px; }
+.closing   { --shift:40px;  }
 
 @media (max-width:760px){
   /* the rail narrows but never to zero: --gut is what caps the oil's
-     half-width, so a zero corridor would render the liquid invisible */
+     half-width, so a zero corridor would render the liquid invisible.
+     The left/right crossing still collapses — on a single mobile column
+     every section's own weight is centred, so there's nothing to cross
+     toward — but a dead-straight line down the edge reads as a ruler,
+     not a current, so a small in-corridor drift survives: half the
+     desktop --shift, clamped well inside the narrowed --gut so the oil
+     never grazes the text or the page edge.  */
   :root{ --gut:34px; }
-  .hero,.statement,.product,.collection,.ritual,.closing{ --shift:0px; }
+  .hero      { --shift:-9px; }
+  .statement { --shift:7px;  }
+  .product   { --shift:-8px; }
+  .collection{ --shift:9px;  }
+  .ritual    { --shift:-6px; }
+  .closing   { --shift:10px; }
+  .band[data-rail="left"]{ padding-left:var(--band-x); padding-right:calc(var(--band-x) + var(--rail-w)); }
+  .band[data-rail="left"] .rail{ right:calc(var(--band-x) + var(--gut) * .5); left:auto; }
 }
 
 /* the tinted bands are painted by #tintLayer at z0, so the sections that
