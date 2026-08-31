@@ -269,6 +269,20 @@ function paintTints(){
 let shown = 0, target = 0, speed = 0, mass = 0;
 const beads = [];
 
+/* flow: 0 = at rest, 1 = moving fast enough to neck the ribbon.
+   Continuity says a faster stream is a thinner one, so the body of the oil
+   narrows as it accelerates and recovers lazily when it stops. The head
+   droplet already does this via `sN` in render(); this is the same idea
+   applied to the whole ribbon so the two agree.
+   FLOW_REF is 26 to match render()'s own `speed / 26` reference — the head
+   and the body must share one definition of "fast" or they will disagree
+   visibly at the tip. */
+let flow = 0;
+let flowNeck = 1;          /* the width multiplier outline() and sheen() read */
+const FLOW_REF = 26;
+const FLOW_ATTACK = .22;   /* necks quickly  */
+const FLOW_RELEASE = .055; /* recovers slowly */
+
 function outline(len){
   const iTip = clamp(Math.floor(len / STEP), 1, pts.length - 1);
   const cN = Math.floor(iTip / CHUNK);
@@ -288,7 +302,10 @@ function outline(len){
     const p = pts[i];
     const back = (len - i * STEP);
     const neck = back < 30 ? lerp(.38, 1, clamp(back / 30, 0, 1)) : 1;
-    const h = p.h * neck;
+    /* flowNeck thins the whole ribbon with velocity; `mass` lets it swell a
+       few percent while it hangs at rest, reusing the signal render() already
+       uses for the head droplet rather than inventing a second timer. */
+    const h = p.h * neck * flowNeck;
     necks.push({ p, h });
     tailL += 'L' + f(p.x + p.nx * h) + ' ' + f(p.y + p.ny * h);
   }
@@ -314,7 +331,8 @@ function sheen(len, side, inset, wid){
   let a = '', b = [];
   for (let i = 2; i <= iTip; i += stride){
     const p = pts[i];
-    const off = p.h * inset * side, w = Math.max(.45, p.h * wid);
+    const hh = p.h * flowNeck;
+    const off = hh * inset * side, w = Math.max(.45, hh * wid);
     a += (a ? 'L' : 'M') + f(p.x + p.nx * (off + w)) + ' ' + f(p.y + p.ny * (off + w));
     b.push('L' + f(p.x + p.nx * (off - w)) + ' ' + f(p.y + p.ny * (off - w)));
   }
@@ -332,6 +350,11 @@ function bulbPath(r, stretch){
 
 function render(){
   if (!pts.length) return;
+  /* NECK_MAX 0.30 = at most 30% thinner at full speed. Above ~0.35 the ribbon
+     visibly breaks into a thread and reads as a bug, not as liquid.
+     SWELL 0.045 = under 5% fatter while hanging. Deliberately near-subliminal. */
+  const NECK_MAX = .30, SWELL = .045;
+  flowNeck = 1 - NECK_MAX * flow + SWELL * clamp(mass, 0, 1);
   const o = outline(shown);
   pBody.setAttribute('d', o.d);
   pRim .setAttribute('d', o.d);
@@ -376,6 +399,12 @@ function frame(now){
   shown += (target - shown) * (reduce ? 1 : .11);   /* liquid lag */
   speed = Math.abs(shown - prev) / Math.max(dt, .001) * .016;
 
+  /* asymmetric smoothing: attack fast, release slow. A single jittery wheel
+     event must not be able to flicker the ribbon's width. `speed` is already
+     absolute, so no Math.abs here. */
+  const wantFlow = reduce ? 0 : clamp(speed / FLOW_REF, 0, 1);
+  flow = lerp(flow, wantFlow, wantFlow > flow ? FLOW_ATTACK : FLOW_RELEASE);
+
   /* a resting tip accumulates mass until it lets go */
   if (!reduce){
     if (speed < 1.4){
@@ -398,7 +427,10 @@ function frame(now){
     }
   }
 
-  const moving = Math.abs(target - shown) > .4 || beads.length || mass > .02;
+  /* `flow` keeps changing after the scroll stops — it releases slowly on
+     purpose. It must therefore count as motion, or the loop parks and the
+     ribbon freezes mid-neck. */
+  const moving = Math.abs(target - shown) > .4 || beads.length || mass > .02 || flow > .01;
   if (moving) { idle = 0; render(); } else { idle += dt; }
 
   if (idle > 1.2){ running = false; return; }      /* park until next scroll */
@@ -560,6 +592,17 @@ const io = new IntersectionObserver(es => {
   });
 }, { threshold: 0.05, rootMargin: '0px 0px -2% 0px' });
 revealEls.forEach(el => io.observe(el));
+
+/* keyboard parity: focusing an element inside a not-yet-revealed section reveals it */
+addEventListener('focusin', e => {
+  let el = e.target;
+  while (el && el !== document.body){
+    if (el.classList && (el.classList.contains('r-wipe') || el.classList.contains('r-rise') || el.classList.contains('step') || el.classList.contains('f-row'))){
+      el.classList.add('is-in');
+    }
+    el = el.parentElement;
+  }
+});
 
 /* The hero is the page's entrance, not a scroll reward. Both gates above are
    viewport-position gates, so on a phone they fired for the eyebrow, headline
