@@ -561,6 +561,18 @@ const io = new IntersectionObserver(es => {
 }, { threshold: 0.05, rootMargin: '0px 0px -2% 0px' });
 revealEls.forEach(el => io.observe(el));
 
+/* The hero is the page's entrance, not a scroll reward. Both gates above are
+   viewport-position gates, so on a phone they fired for the eyebrow, headline
+   and sub but not for the CTAs and the cue further down the column - leaving
+   those two at opacity:0 while their boxes still held ~170px of layout. The
+   result read as stray padding in the tail of .hero-copy, and made the copy
+   look stretched to the bottle's height when it never was. Play the hero's
+   own data-d stagger on load regardless of where its parts landed; one frame
+   later so the transition still has a starting state to animate from. */
+requestAnimationFrame(() => {
+  $$('.hero .r-wipe').forEach(el => { io.unobserve(el); el.classList.add('is-in'); });
+});
+
 /* images: fade in when they actually decode, and drop the fallback label */
 $$('.fig img').forEach(img => {
   const done = () => { img.classList.add('is-loaded'); img.closest('.fig')?.classList.add('has-image'); };

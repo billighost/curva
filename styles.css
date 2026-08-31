@@ -365,20 +365,25 @@ ul,ol{ list-style:none; }
 @media (max-width:900px){
   .hero{
     display:flex; flex-direction:column; align-items:center;
-    min-height:auto; gap:1.8rem;
-    padding-top:clamp(6rem,12vh,8rem); padding-bottom:clamp(2rem,5vh,3.5rem);
+    min-height:auto; gap:1.5rem;
+    padding-top:clamp(5.25rem,10vh,7rem); padding-bottom:clamp(1.75rem,4vh,3rem);
   }
-  /* explicit align-self, not just the parent's align-items: a flex column
-     only auto-sizes each item to its own content on the main (vertical)
-     axis regardless, but this makes it impossible for either box to pick
-     up stretch from anywhere and guarantees hero-copy is exactly as tall
-     as its own text, nothing more */
+  /* hero-copy is never stretched here - a flex column auto-sizes each item
+     to its own content on the main (vertical) axis, and measurement confirms
+     its box bottom == its last child's bottom at every width. It only ever
+     LOOKED as tall as the bottle because its tail held two invisible boxes;
+     see the reveal note in oil.js. align-self is belt-and-braces. */
   .hero-copy{ max-width:52ch; align-self:flex-start; }
   .hero-stage{
     order:-1; margin-right:0; justify-content:center; padding-right:0;
     align-self:center;
   }
-  .hero-bottle-wrap{ max-width:min(52vw, 220px); }
+  /* the photo is 354x873 (1:2.47), so a width-only cap hands its HEIGHT to
+     the aspect ratio: 52vw put the bottle at 461-542px, up to 62% of a phone
+     screen, which pushed the CTAs ~160px past the fold. The third term is a
+     height cap expressed as a width via that ratio, so on short screens the
+     bottle scales off the shorter axis instead of the wider one. */
+  .hero-bottle-wrap{ max-width:min(52vw, 220px, calc(46svh * 0.406)); }
   /* the grid's column gap doesn't apply in a single flex column, so the
      row rhythm was inherited wholesale from the desktop measurements —
      tightened here so the CTAs sit close enough to read as one screen,
@@ -386,6 +391,16 @@ ul,ol{ list-style:none; }
   .hero-sub{ margin-top:1.1rem; }
   .hero-actions{ margin-top:1.4rem; }
   .hero-cue{ margin-top:1.5rem; }
+}
+
+@media (max-width:460px){
+  /* the CTAs intrinsically need ~368px side by side but the band's content
+     row is only ~262px here (band-x plus the oil corridor's rail-w), so they
+     were wrapping - a ragged second row that still carried the full 1.4rem
+     inline gap as vertical dead space. Stack them on purpose: full-bleed
+     targets, tight row gap. */
+  .hero-actions{ flex-direction:column; align-items:stretch; gap:.65rem; }
+  .hero-actions .btn{ justify-content:center; }
 }
 
 /* ── buttons ─────────────────────────────────────────────────────────── */
